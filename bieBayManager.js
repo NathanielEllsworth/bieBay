@@ -30,107 +30,134 @@ connection.connect(function (err) {
     function initialPrompt() {
 
 
-            console.log("");
-            console.log("");
-            inquirer.prompt([
+        console.log("");
+        console.log("");
+        inquirer.prompt([
+            {
+                type: 'list',
+                message: 'Pick a management option from the list:',
+                choices: ['View Products', 'View Inventory', 'Add Inventory', 'Add New Product'],
+                name: 'menuOptions'
+            }
+
+
+        ]).then(function (response) {
+            idChosen = response.menuOptions;
+
+            switch (idChosen) {
+                case 'View Products':
+                    viewProduct();
+                    break;
+                case 'View Inventory':
+                    viewInventory();
+                    break;
+                case 'Add Inventory':
+                    addInventory();
+                    break;
+                case 'Add New Product':
+                    addNewProduct();
+                    break;
+                default:
+                    console.log("incorrect choice");
+
+
+            }
+
+
+            function viewProduct() {
+                connection.query("SELECT `items_id`, `product_name`, `price` FROM `products`", function (err, data) {
+                    if (err) throw err;
+                    console.log("View Products For Sale");
+                    for (var i = 0; i < data.length; i++) {
+                        itemsList.push(data[i]);
+                        console.log("Item ID: ", itemsList[i].items_id + ":", itemsList[i].product_name);
+                    }
+
+                })
+            }
+
+
+            function viewInventory() {
+                connection.query("SELECT `items_id`, `product_name`, `price` FROM `products` WHERE stock_quantity <= 4", function (err, data) {
+                    if (err) throw err;
+                    console.log("Items with less than 5 in Inventory");
+                    console.log("");
+                    data <= 5;
+                    for (var i = 0; i < data.length; i++) {
+                        itemsList.push(data[i]);
+
+                        console.log("Item ID: ", itemsList[i].items_id + " Item", itemsList[i].product_name);
+                    }
+
+                })
+            }
+
+
+            function addInventory() {
+                connection.query("SELECT `items_id`, `product_name`, `price` FROM `products`", function (err, data) {
+                    if (err) throw err;
+                    console.log("View Products For Sale");
+                    for (var i = 0; i < data.length; i++) {
+                        itemsList.push(data[i]);
+                        console.log("Item ID: ", itemsList[i].items_id + ":", itemsList[i].product_name);
+                    }
+
+                })
+            }
+
+
+            function addNewProduct() {
+                inquirer.prompt([
+
+                    {
+                        type: 'input',
+                        message: 'product to add',
+                        name: 'productName'
+                    },
+                    {
+                        type: 'input',
+                        message: 'department_name',
+                        name: 'departmentName'
+                    },
+                    {
+                        type: 'input',
+                        message: 'price',
+                        name: 'price'
+                    },
+                    {
+                        type: 'input',
+                        message: 'stock quantity',
+                        name: 'stockInventory'
+                    },
+                    {
+                        type: 'input',
+                        message: 'autographed',
+                        name: 'autographed'
+                    }
+
+
+                ]).then(function (res)
                 {
-                    type: 'list',
-                    message: 'Pick a management option from the list:',
-                    choices: ['View Products', 'View Inventory', 'Add Inventory', 'Add New Product'],
-                    name: 'menuOptions'
-                }
-
-
-
-            ]).then(function (response) {
-                idChosen = response.menuOptions;
-
-                switch (idChosen) {
-                    case 'View Products':
-                       viewProduct();
-                        break;
-                     case 'View Inventory':
-                         viewInventory();
-                         break;
-                     case 'Add Inventory':
-                         addInventory();
-                         break;
-                     case 'Add New Product':
-                         addNewProduct();
-                         break;
-                    default:
-                        console.log("incorrect choice");
-
-
-                }
-
-                // connection.query("SELECT `items_id`, `product_name`, `price`, `stock_quantity`, FROM `products` WHERE `items_id` = ?", [idChosen], function(err, data) {
-                // //
-                // //     console.log("You chose", data[0].product_name, "for $" + data[0].price);
-                //
-                //
-                //
-                // })
-
-                function viewProduct() {
-                    connection.query("SELECT `items_id`, `product_name`, `price` FROM `products`", function (err, data) {
+                    connection.query("INSERT INTO `products` ( `product_name`, `department_name`, `product_name`, `price`, `stock_quantity`, `autographed`) VALUES (?, ?, ?, ?, ?)", [res.productName, res.departmentName, res.price, res.stockInventory, res.autographed], function (err, data) {
                         if (err) throw err;
                         console.log("View Products For Sale");
-                        for (var i = 0; i < data.length; i++) {
-                            itemsList.push(data[i]);
-                            console.log("Item ID: ", itemsList[i].items_id + ":", itemsList[i].product_name);
-                        }
+
 
                     })
-                }
+                })
+
+            }
 
 
 
-                function viewInventory() {
-                    connection.query("SELECT `items_id`, `product_name`, `price` FROM `products` WHERE stock_quantity <= 4", function (err, data) {
-                        if (err) throw err;
-                        console.log("Items with less than 5 in Inventory");
-                        console.log("");
-                        data <= 5;
-                        for (var i = 0; i < data.length; i++) {
-                            itemsList.push(data[i]);
-
-                            console.log("Item ID: ", itemsList[i].items_id + " Item", itemsList[i].product_name);
-                        }
-
-                    })
-                }
-
-
-                function addInventory() {
-                    connection.query("SELECT `items_id`, `product_name`, `price` FROM `products`", function (err, data) {
-                        if (err) throw err;
-                        console.log("View Products For Sale");
-                        for (var i = 0; i < data.length; i++) {
-                            itemsList.push(data[i]);
-                            console.log("Item ID: ", itemsList[i].items_id + ":", itemsList[i].product_name);
-                        }
-
-                    })
-                }
-
-
-                function addNewProduct() {
-                    connection.query("SELECT `items_id`, `product_name`, `price` FROM `products`", function (err, data) {
-                        if (err) throw err;
-                        console.log("View Products For Sale");
-                        for (var i = 0; i < data.length; i++) {
-                            itemsList.push(data[i]);
-                            console.log("Item ID: ", itemsList[i].items_id + ":", itemsList[i].product_name);
-                        }
-
-                    })
-                }
-
-            });
-
-        // })
+        })
 
     }
-
 });
+
+// prompt
+
+
+//stock quantity
+
+//autograph
