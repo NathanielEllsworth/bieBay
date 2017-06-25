@@ -1,0 +1,23 @@
+{
+  "name": "name",
+  "version": "1.0.0",
+  "description": "name",
+  "main": "bieBayCustomer.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NathanielEllsworth/bieBay.git"
+  },
+  "author": "nate",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NathanielEllsworth/bieBay/issues"
+  },
+  "homepage": "https://github.com/NathanielEllsworth/bieBay#readme",
+  "dependencies": {
+    "inquirer": "^3.1.1",
+    "mysql": "^2.13.0"
+  }
+}
