@@ -36,7 +36,7 @@ connection.connect(function (err) {
                 {
                     type: 'list',
                     message: 'Pick a management option from the list:',
-                    choices: ['View products', 'View other'],
+                    choices: ['View Products', 'View Inventory', 'Add Inventory', 'Add New Product'],
                     name: 'menuOptions'
                 }
 
@@ -46,27 +46,24 @@ connection.connect(function (err) {
                 idChosen = response.menuOptions;
 
                 switch (idChosen) {
-                    case 'View products':
+                    case 'View Products':
                        viewProduct();
                         break;
-                    // case 1:
-                    //     day = "Monday";
-                    //     break;
-                    // case 2:
-                    //     day = "Tuesday";
-                    //     break;
-                    // case 3:
-                    //     day = "Wednesday";
-                    //     break;
-                    // case 4:
-                    //     day = "Thursday";
-                    //     break;
-                    // case 5:
-                    //     day = "Friday";
-                    //     break;
-                    // case 6:
-                    //     day = "Saturday";
+                     case 'View Inventory':
+                         viewInventory();
+                         break;
+                     case 'Add Inventory':
+                         addInventory();
+                         break;
+                     case 'Add New Product':
+                         addNewProduct();
+                         break;
+                    default:
+                        console.log("incorrect choice");
+
+
                 }
+
                 // connection.query("SELECT `items_id`, `product_name`, `price`, `stock_quantity`, FROM `products` WHERE `items_id` = ?", [idChosen], function(err, data) {
                 // //
                 // //     console.log("You chose", data[0].product_name, "for $" + data[0].price);
@@ -76,6 +73,49 @@ connection.connect(function (err) {
                 // })
 
                 function viewProduct() {
+                    connection.query("SELECT `items_id`, `product_name`, `price` FROM `products`", function (err, data) {
+                        if (err) throw err;
+                        console.log("View Products For Sale");
+                        for (var i = 0; i < data.length; i++) {
+                            itemsList.push(data[i]);
+                            console.log("Item ID: ", itemsList[i].items_id + ":", itemsList[i].product_name);
+                        }
+
+                    })
+                }
+
+
+
+                function viewInventory() {
+                    connection.query("SELECT `items_id`, `product_name`, `price` FROM `products` WHERE stock_quantity <= 4", function (err, data) {
+                        if (err) throw err;
+                        console.log("Items with less than 5 in Inventory");
+                        console.log("");
+                        data <= 5;
+                        for (var i = 0; i < data.length; i++) {
+                            itemsList.push(data[i]);
+
+                            console.log("Item ID: ", itemsList[i].items_id + " Item", itemsList[i].product_name);
+                        }
+
+                    })
+                }
+
+
+                function addInventory() {
+                    connection.query("SELECT `items_id`, `product_name`, `price` FROM `products`", function (err, data) {
+                        if (err) throw err;
+                        console.log("View Products For Sale");
+                        for (var i = 0; i < data.length; i++) {
+                            itemsList.push(data[i]);
+                            console.log("Item ID: ", itemsList[i].items_id + ":", itemsList[i].product_name);
+                        }
+
+                    })
+                }
+
+
+                function addNewProduct() {
                     connection.query("SELECT `items_id`, `product_name`, `price` FROM `products`", function (err, data) {
                         if (err) throw err;
                         console.log("View Products For Sale");
