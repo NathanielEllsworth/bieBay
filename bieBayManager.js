@@ -74,6 +74,7 @@ connection.connect(function (err) {
                     }
 
                 })
+                
             }
 
 
@@ -90,6 +91,7 @@ connection.connect(function (err) {
                     }
 
                 })
+
             }
 
 
@@ -103,61 +105,56 @@ connection.connect(function (err) {
                     }
 
                 })
+
             }
 
 
             function addNewProduct() {
                 inquirer.prompt([
-
                     {
                         type: 'input',
-                        message: 'product to add',
+                        message: 'Product to Add',
                         name: 'productName'
                     },
                     {
                         type: 'input',
-                        message: 'department_name',
+                        message: 'Department Name',
                         name: 'departmentName'
                     },
                     {
                         type: 'input',
-                        message: 'price',
+                        message: 'Price',
                         name: 'price'
                     },
                     {
                         type: 'input',
-                        message: 'stock quantity',
+                        message: 'Stock Quantity',
                         name: 'stockInventory'
                     },
                     {
                         type: 'input',
-                        message: 'autographed',
+                        message: 'Autographed (1 yes, 0 no)',
                         name: 'autographed'
                     }
 
 
                 ]).then(function (res)
                 {
-                    connection.query("INSERT INTO `products` ( `product_name`, `department_name`, `product_name`, `price`, `stock_quantity`, `autographed`) VALUES (?, ?, ?, ?, ?)", [res.productName, res.departmentName, res.price, res.stockInventory, res.autographed], function (err, data) {
+                    connection.query("INSERT INTO `products` ( `product_name`, `department_name`, `price`, `stock_quantity`, `autographed`) VALUES (?, ?, ?, ?, ?)", [res.productName, res.departmentName, res.price, res.stockInventory, res.autographed], function (err, data) {
                         if (err) throw err;
-                        console.log("View Products For Sale");
+                        console.log("New Product Added!");
 
 
                     })
+
                 })
 
             }
 
-
-
         })
 
     }
+
 });
 
-// prompt
 
-
-//stock quantity
-
-//autograph
