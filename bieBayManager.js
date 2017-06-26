@@ -1,13 +1,19 @@
 /**
- *              Manager App
+ *             The Manager App
  */
 
 var mysql = require('mysql');
 var inquirer = require('inquirer');
 var itemsList = [];
-var listInvent = [];
+var listAddInvent = [];
 var idChosen;
 
+
+/**
+ *
+ * @type {Connection} connects this JavaScript file to the database
+ *
+ */
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -26,6 +32,13 @@ connection.connect(function (err) {
     console.log("");
     console.log("Check out and manage your Products and Inventory!");
     console.log("");
+
+
+    /**
+     * Prompt function asks the store manager would like to do with the products and inventory
+     * for the store
+     */
+
 
     initialPrompt();
     function initialPrompt() {
@@ -65,6 +78,11 @@ connection.connect(function (err) {
             }
 
 
+            /**
+             * View all the store's Products function
+             */
+
+
             function viewProduct() {
                 connection.query("SELECT `items_id`, `product_name`, `price` FROM `products`", function (err, data) {
                     if (err) throw err;
@@ -79,7 +97,9 @@ connection.connect(function (err) {
             }
 
 
-
+            /**
+             * View store Inventory function
+             */
 
 
             function viewInventory() {
@@ -98,20 +118,23 @@ connection.connect(function (err) {
             }
 
 
+            /**
+             * Add more Inventory function
+             */
 
 
             function addInventory() {
-                connection.query('SELECT `product_name` FROM `products`', function(err, data) {
+                connection.query('SELECT `product_name` FROM `products`', function (err, data) {
                     if (err) throw err;
                     for (var i = 0; i < data.length; i++) {
-                        listInvent.push(data[i].product_name)
+                        listAddInvent.push(data[i].product_name)
                     }
                     inquirer.prompt([
                         {
                             type: 'list',
                             message: 'Choose a product',
                             name: 'prodChoose',
-                            choices: listInvent
+                            choices: listAddInvent
                         }, {
                             type: 'input',
                             message: 'Modify product stock: ',
@@ -128,6 +151,9 @@ connection.connect(function (err) {
             }
 
 
+            /**
+             *  Add a New Product Function
+             */
 
 
             function addNewProduct() {
@@ -154,13 +180,12 @@ connection.connect(function (err) {
                     },
                     {
                         type: 'input',
-                        message: 'Autographed (1 yes, 0 no)',
+                        message: 'Autographed? (1 yes, 0 no)',
                         name: 'autographed'
                     }
 
 
-                ]).then(function (res)
-                {
+                ]).then(function (res) {
                     connection.query("INSERT INTO `products` ( `product_name`, `department_name`, `price`, `stock_quantity`, `autographed`) VALUES (?, ?, ?, ?, ?)", [res.productName, res.departmentName, res.price, res.stockInventory, res.autographed], function (err, data) {
                         if (err) throw err;
                         console.log("New Product Added!");

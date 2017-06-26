@@ -5,6 +5,13 @@ var idChosen;
 var quantityChosen;
 var total;
 var changeStock;
+
+
+/**
+ *
+ * @type {Connection} connects this JavaScript file to the database
+ */
+
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -22,6 +29,15 @@ connection.connect(function(err) {
     console.log("");
     console.log("What would you like to buy today?");
     console.log("");
+
+
+
+
+    /**
+     * Prompt function asks the customer would item they would like to purchase
+     */
+
+
     initialPrompt();
     function initialPrompt() {
         connection.query("SELECT `items_id`, `product_name`, `price`, `autographed` FROM `products`", function(err, data) {
@@ -55,6 +71,14 @@ connection.connect(function(err) {
                     } else {
                         console.log("You chose", data[0].product_name, "for $" + data[0].price);
                     }
+
+
+
+
+                    /**
+                     * Asks the customer how many of an item they would like to purchase
+                     */
+
 
                     checkAmount();
                     function checkAmount () {
