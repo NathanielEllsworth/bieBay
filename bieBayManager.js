@@ -5,6 +5,7 @@
 var mysql = require('mysql');
 var inquirer = require('inquirer');
 var itemsList = [];
+var listInvent = [];
 var idChosen;
 
 
@@ -36,7 +37,7 @@ connection.connect(function (err) {
             {
                 type: 'list',
                 message: 'Pick a management option from the list:',
-                choices: ['View Products', 'View Inventory', 'Add Inventory', 'Add New Product'],
+                choices: ['View Products', 'View Low Inventory', 'Add Inventory', 'Add New Product'],
                 name: 'menuOptions'
             }
 
@@ -48,7 +49,7 @@ connection.connect(function (err) {
                 case 'View Products':
                     viewProduct();
                     break;
-                case 'View Inventory':
+                case 'View Low Inventory':
                     viewInventory();
                     break;
                 case 'Add Inventory':
@@ -74,39 +75,59 @@ connection.connect(function (err) {
                     }
 
                 })
-                
+
             }
+
+
+
 
 
             function viewInventory() {
                 connection.query("SELECT `items_id`, `product_name`, `price` FROM `products` WHERE stock_quantity <= 4", function (err, data) {
                     if (err) throw err;
-                    console.log("Items with less than 5 in Inventory");
+                    console.log("Inventory with less than 5 items in stock");
                     console.log("");
-                    data <= 5;
                     for (var i = 0; i < data.length; i++) {
                         itemsList.push(data[i]);
 
-                        console.log("Item ID: ", itemsList[i].items_id + " Item", itemsList[i].product_name);
+                        console.log("Item ID#:", itemsList[i].items_id + " Item:", itemsList[i].product_name);
                     }
 
                 })
 
             }
+
+
 
 
             function addInventory() {
-                connection.query("SELECT `items_id`, `product_name`, `price` FROM `products`", function (err, data) {
+                connection.query('SELECT `product_name` FROM `products`', function(err, data) {
                     if (err) throw err;
-                    console.log("View Products For Sale");
                     for (var i = 0; i < data.length; i++) {
-                        itemsList.push(data[i]);
-                        console.log("Item ID: ", itemsList[i].items_id + ":", itemsList[i].product_name);
+                        listInvent.push(data[i].product_name)
                     }
+                    inquirer.prompt([
+                        {
+                            type: 'list',
+                            message: 'Choose a product',
+                            name: 'prodChoose',
+                            choices: listInvent
+                        }, {
+                            type: 'input',
+                            message: 'Modify product stock: ',
+                            name: 'stockQuant'
+                        }
+                    ]).then(function (res) {
+                        connection.query('UPDATE `products` SET `stock_quantity`= ? WHERE `product_name`= ?', [res.stockQuant, res.prodChoose], function (err, data) {
+                            if (err) throw err;
 
+                            console.log('Stock updated for ' + res.prodChoose);
+                        })
+                    })
                 })
-
             }
+
+
 
 
             function addNewProduct() {
@@ -154,6 +175,7 @@ connection.connect(function (err) {
         })
 
     }
+
 
 });
 
